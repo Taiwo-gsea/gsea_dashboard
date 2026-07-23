@@ -1,0 +1,92 @@
+<svg viewBox="0 0 700 520" xmlns="http://www.w3.org/2000/svg" font-family="sans-serif">
+<title>GSEA Dashboard — Sequence Diagram: SCI Calculation Flow</title>
+<rect width="700" height="520" fill="white"/>
+<text x="350" y="22" text-anchor="middle" font-size="14" font-weight="600" fill="#0072B2">Sequence Diagram — SCI Calculation Flow</text>
+
+<!-- Lifeline headers -->
+<rect x="40"  y="38" width="100" height="30" rx="5" fill="#009E73"/>
+<text x="90"  y="58" text-anchor="middle" font-size="11" font-weight="500" fill="white">User</text>
+
+<rect x="180" y="38" width="120" height="30" rx="5" fill="#639922"/>
+<text x="240" y="58" text-anchor="middle" font-size="11" font-weight="500" fill="white">Streamlit UI</text>
+
+<rect x="340" y="38" width="120" height="30" rx="5" fill="#BA7517"/>
+<text x="400" y="58" text-anchor="middle" font-size="11" font-weight="500" fill="white">FastAPI Backend</text>
+
+<rect x="500" y="38" width="120" height="30" rx="5" fill="#378ADD"/>
+<text x="560" y="58" text-anchor="middle" font-size="11" font-weight="500" fill="white">SCI Engine / DB</text>
+
+<!-- Lifelines -->
+<line x1="90"  y1="68" x2="90"  y2="510" stroke="#009E73" stroke-width="1" stroke-dasharray="5 3"/>
+<line x1="240" y1="68" x2="240" y2="510" stroke="#639922" stroke-width="1" stroke-dasharray="5 3"/>
+<line x1="400" y1="68" x2="400" y2="510" stroke="#BA7517" stroke-width="1" stroke-dasharray="5 3"/>
+<line x1="560" y1="68" x2="560" y2="510" stroke="#378ADD" stroke-width="1" stroke-dasharray="5 3"/>
+
+<!-- Activation boxes -->
+<rect x="86"  y="110" width="8" height="260" fill="#009E73" rx="2"/>
+<rect x="236" y="130" width="8" height="200" fill="#639922" rx="2"/>
+<rect x="396" y="165" width="8" height="150" fill="#BA7517" rx="2"/>
+<rect x="556" y="185" width="8" height="110" fill="#378ADD" rx="2"/>
+
+<!-- Messages -->
+<!-- 1 -->
+<line x1="94" y1="120" x2="236" y2="120" stroke="#333" stroke-width="1.2" marker-end="url(#arr)"/>
+<text x="160" y="115" font-size="10" fill="#333" text-anchor="middle">1. Enter E, I, M, R values</text>
+
+<!-- 2 -->
+<line x1="244" y1="145" x2="396" y2="145" stroke="#333" stroke-width="1.2" marker-end="url(#arr)"/>
+<text x="320" y="140" font-size="10" fill="#333" text-anchor="middle">2. POST /api/v1/sci/calculate</text>
+
+<!-- 3 -->
+<line x1="404" y1="170" x2="556" y2="170" stroke="#333" stroke-width="1.2" marker-end="url(#arr)"/>
+<text x="480" y="165" font-size="10" fill="#333" text-anchor="middle">3. SCICalculator.calculate()</text>
+
+<!-- 4 -->
+<line x1="556" y1="195" x2="556" y2="215" stroke="#378ADD" stroke-width="1"/>
+<line x1="556" y1="215" x2="404" y2="215" stroke="#378ADD" stroke-width="1.2" stroke-dasharray="5 3" marker-end="url(#arr2)"/>
+<text x="480" y="210" font-size="10" fill="#378ADD" text-anchor="middle">4. SCIResult (sci_score, breakdown)</text>
+
+<!-- 5 -->
+<line x1="556" y1="240" x2="556" y2="260" stroke="#378ADD" stroke-width="1"/>
+<text x="620" y="255" font-size="10" fill="#333" text-anchor="middle">5. INSERT</text>
+<text x="620" y="267" font-size="10" fill="#333" text-anchor="middle">sci_measurements</text>
+<rect x="580" y="242" width="75" height="30" rx="4" fill="#e8f4fd" stroke="#378ADD" stroke-width="0.8"/>
+
+<!-- 6 -->
+<line x1="404" y1="300" x2="244" y2="300" stroke="#BA7517" stroke-width="1.2" stroke-dasharray="5 3" marker-end="url(#arr2)"/>
+<text x="324" y="294" font-size="10" fill="#BA7517" text-anchor="middle">6. JSON response (200 OK)</text>
+
+<!-- 7 -->
+<line x1="244" y1="330" x2="94" y2="330" stroke="#639922" stroke-width="1.2" stroke-dasharray="5 3" marker-end="url(#arr2)"/>
+<text x="169" y="324" font-size="10" fill="#639922" text-anchor="middle">7. Render SCI score + donut chart</text>
+
+<!-- 8 — proxy path -->
+<line x1="94" y1="370" x2="236" y2="370" stroke="#555" stroke-width="1" stroke-dasharray="3 2"/>
+<text x="165" y="364" font-size="9" fill="#555" text-anchor="middle" font-style="italic">alt: proxy metrics mode</text>
+
+<line x1="244" y1="390" x2="396" y2="390" stroke="#555" stroke-width="1" marker-end="url(#arr)"/>
+<text x="320" y="385" font-size="10" fill="#333" text-anchor="middle">8. POST /api/v1/sci/estimate-from-proxy</text>
+
+<line x1="404" y1="410" x2="556" y2="410" stroke="#555" stroke-width="1" marker-end="url(#arr)"/>
+<text x="480" y="404" font-size="10" fill="#333" text-anchor="middle">9. calculate_from_proxy_metrics()</text>
+
+<line x1="556" y1="430" x2="244" y2="430" stroke="#555" stroke-width="1" stroke-dasharray="5 3" marker-end="url(#arr2)"/>
+<text x="400" y="424" font-size="10" fill="#555" text-anchor="middle">10. SCIResult + estimation_note</text>
+
+<line x1="244" y1="455" x2="94" y2="455" stroke="#639922" stroke-width="1" stroke-dasharray="5 3" marker-end="url(#arr2)"/>
+<text x="169" y="449" font-size="10" fill="#639922" text-anchor="middle">11. Render with proxy warning badge</text>
+
+<!-- alt box -->
+<rect x="230" y="358" width="290" height="110" rx="4" fill="none" stroke="#aaa" stroke-width="0.8" stroke-dasharray="4 3"/>
+<text x="235" y="371" font-size="9" fill="#aaa" font-style="italic">alt [proxy mode]</text>
+
+<!-- Arrow markers -->
+<defs>
+  <marker id="arr" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="5" markerHeight="5" orient="auto">
+    <path d="M2 2L8 5L2 8" fill="none" stroke="#333" stroke-width="1.5"/>
+  </marker>
+  <marker id="arr2" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="5" markerHeight="5" orient="auto">
+    <path d="M2 2L8 5L2 8" fill="none" stroke="#888" stroke-width="1.5"/>
+  </marker>
+</defs>
+</svg>

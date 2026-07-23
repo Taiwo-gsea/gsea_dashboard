@@ -1,0 +1,92 @@
+<svg viewBox="0 0 660 560" xmlns="http://www.w3.org/2000/svg" font-family="sans-serif">
+<title>GSEA Dashboard — UML Use Case Diagram</title>
+<rect width="660" height="560" fill="white"/>
+
+<!-- System boundary -->
+<rect x="140" y="30" width="480" height="500" rx="12" fill="none" stroke="#0072B2" stroke-width="1.5" stroke-dasharray="6 3"/>
+<text x="380" y="22" text-anchor="middle" font-size="14" font-weight="600" fill="#0072B2">GSEA Dashboard System</text>
+
+<!-- Actor: Practitioner -->
+<ellipse cx="62" cy="120" rx="18" ry="18" fill="none" stroke="#009E73" stroke-width="1.5"/>
+<line x1="62" y1="138" x2="62" y2="175" stroke="#009E73" stroke-width="1.5"/>
+<line x1="38" y1="155" x2="86" y2="155" stroke="#009E73" stroke-width="1.5"/>
+<line x1="62" y1="175" x2="42" y2="200" stroke="#009E73" stroke-width="1.5"/>
+<line x1="62" y1="175" x2="82" y2="200" stroke="#009E73" stroke-width="1.5"/>
+<text x="62" y="218" text-anchor="middle" font-size="11" fill="#009E73" font-weight="500">Software</text>
+<text x="62" y="231" text-anchor="middle" font-size="11" fill="#009E73" font-weight="500">Practitioner</text>
+
+<!-- Actor: Researcher -->
+<ellipse cx="62" cy="370" rx="18" ry="18" fill="none" stroke="#E69F00" stroke-width="1.5"/>
+<line x1="62" y1="388" x2="62" y2="425" stroke="#E69F00" stroke-width="1.5"/>
+<line x1="38" y1="405" x2="86" y2="405" stroke="#E69F00" stroke-width="1.5"/>
+<line x1="62" y1="425" x2="42" y2="450" stroke="#E69F00" stroke-width="1.5"/>
+<line x1="62" y1="425" x2="82" y2="450" stroke="#E69F00" stroke-width="1.5"/>
+<text x="62" y="468" text-anchor="middle" font-size="11" fill="#E69F00" font-weight="500">GSE</text>
+<text x="62" y="481" text-anchor="middle" font-size="11" fill="#E69F00" font-weight="500">Researcher</text>
+
+<!-- Use cases: column 1 -->
+<ellipse cx="285" cy="80" rx="115" ry="22" fill="#EAF3DE" stroke="#639922" stroke-width="1"/>
+<text x="285" y="85" text-anchor="middle" font-size="11" fill="#1a1a1a">Calculate SCI Score</text>
+
+<ellipse cx="285" cy="140" rx="115" ry="22" fill="#EAF3DE" stroke="#639922" stroke-width="1"/>
+<text x="285" y="145" text-anchor="middle" font-size="11" fill="#1a1a1a">View Energy Trend</text>
+
+<ellipse cx="285" cy="200" rx="115" ry="22" fill="#EAF3DE" stroke="#639922" stroke-width="1"/>
+<text x="285" y="205" text-anchor="middle" font-size="11" fill="#1a1a1a">Estimate from Proxy Metrics</text>
+
+<ellipse cx="285" cy="260" rx="115" ry="22" fill="#EAF3DE" stroke="#639922" stroke-width="1"/>
+<text x="285" y="265" text-anchor="middle" font-size="11" fill="#1a1a1a">Upload GMT / CodeCarbon CSV</text>
+
+<ellipse cx="285" cy="320" rx="115" ry="22" fill="#EAF3DE" stroke="#639922" stroke-width="1"/>
+<text x="285" y="325" text-anchor="middle" font-size="11" fill="#1a1a1a">Apply Interactive Filters</text>
+
+<ellipse cx="285" cy="380" rx="115" ry="22" fill="#EAF3DE" stroke="#639922" stroke-width="1"/>
+<text x="285" y="385" text-anchor="middle" font-size="11" fill="#1a1a1a">Compare Configurations</text>
+
+<ellipse cx="285" cy="440" rx="115" ry="22" fill="#EAF3DE" stroke="#639922" stroke-width="1"/>
+<text x="285" y="445" text-anchor="middle" font-size="11" fill="#1a1a1a">Export Report (CSV/JSON)</text>
+
+<!-- Use cases: column 2 -->
+<ellipse cx="530" cy="110" rx="100" ry="22" fill="#FAEEDA" stroke="#BA7517" stroke-width="1"/>
+<text x="530" y="115" text-anchor="middle" font-size="11" fill="#1a1a1a">View Carbon Map</text>
+
+<ellipse cx="530" cy="200" rx="100" ry="22" fill="#FAEEDA" stroke="#BA7517" stroke-width="1"/>
+<text x="530" y="205" text-anchor="middle" font-size="11" fill="#1a1a1a">Extract NLP Entities</text>
+
+<ellipse cx="530" cy="290" rx="100" ry="22" fill="#FAEEDA" stroke="#BA7517" stroke-width="1"/>
+<text x="530" y="295" text-anchor="middle" font-size="11" fill="#1a1a1a">Validate NLP Entities</text>
+
+<ellipse cx="530" cy="380" rx="100" ry="22" fill="#FAEEDA" stroke="#BA7517" stroke-width="1"/>
+<text x="530" y="385" text-anchor="middle" font-size="11" fill="#1a1a1a">Save Measurement to DB</text>
+
+<ellipse cx="530" cy="460" rx="100" ry="22" fill="#FAEEDA" stroke="#BA7517" stroke-width="1"/>
+<text x="530" y="465" text-anchor="middle" font-size="11" fill="#1a1a1a">View SCI Statistics</text>
+
+<!-- Practitioner → use cases (col 1) -->
+<line x1="80" y1="115" x2="170" y2="80" stroke="#009E73" stroke-width="0.9"/>
+<line x1="80" y1="120" x2="170" y2="140" stroke="#009E73" stroke-width="0.9"/>
+<line x1="80" y1="125" x2="170" y2="200" stroke="#009E73" stroke-width="0.9"/>
+<line x1="80" y1="128" x2="170" y2="260" stroke="#009E73" stroke-width="0.9"/>
+<line x1="80" y1="130" x2="170" y2="320" stroke="#009E73" stroke-width="0.9"/>
+<line x1="80" y1="132" x2="170" y2="440" stroke="#009E73" stroke-width="0.9"/>
+
+<!-- Practitioner → col 2 -->
+<line x1="80" y1="118" x2="430" y2="110" stroke="#009E73" stroke-width="0.9"/>
+
+<!-- Researcher → use cases -->
+<line x1="80" y1="368" x2="170" y2="380" stroke="#E69F00" stroke-width="0.9"/>
+<line x1="80" y1="370" x2="430" y2="200" stroke="#E69F00" stroke-width="0.9"/>
+<line x1="80" y1="373" x2="430" y2="290" stroke="#E69F00" stroke-width="0.9"/>
+<line x1="80" y1="375" x2="430" y2="380" stroke="#E69F00" stroke-width="0.9"/>
+<line x1="80" y1="378" x2="430" y2="460" stroke="#E69F00" stroke-width="0.9"/>
+
+<!-- Include / extends between col1 and col2 -->
+<line x1="400" y1="80" x2="430" y2="110" stroke="#888" stroke-width="0.7" stroke-dasharray="4 3"/>
+<text x="412" y="92" font-size="9" fill="#888">«include»</text>
+
+<line x1="400" y1="260" x2="430" y2="380" stroke="#888" stroke-width="0.7" stroke-dasharray="4 3"/>
+<text x="410" y="320" font-size="9" fill="#888">«include»</text>
+
+<line x1="400" y1="200" x2="430" y2="200" stroke="#888" stroke-width="0.7" stroke-dasharray="4 3"/>
+<text x="402" y="194" font-size="9" fill="#888">«extend»</text>
+</svg>

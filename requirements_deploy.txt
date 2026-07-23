@@ -1,0 +1,41 @@
+# ============================================================
+# GSEA Dashboard — Streamlit Community Cloud deployment deps
+# ============================================================
+# This is the DEPLOY version. It excludes PyTorch / Transformers
+# (too large for Community Cloud; NLP defaults to rule-based only).
+# For local development with full NLP, use requirements.txt instead.
+
+# Frontend / Dashboard
+streamlit>=1.32.0
+streamlit-extras>=0.3.0
+
+# Visualisation
+plotly>=5.18.0
+
+# Data Processing
+pandas>=2.1.0
+numpy>=1.26.0
+openpyxl>=3.1.0
+python-multipart>=0.0.6
+
+# Backend API
+fastapi>=0.109.0
+uvicorn>=0.27.0
+httpx>=0.26.0
+pydantic>=2.5.0
+pydantic-settings>=2.0.0
+
+# Database
+sqlalchemy>=2.0.0
+aiosqlite>=0.19.0
+
+# NLP — rule-based layer only (spaCy without large models)
+spacy>=3.7.0
+
+# Reporting / Export
+jinja2>=3.1.0
+
+# Utilities
+python-dotenv>=1.0.0
+requests>=2.31.0
+aiofiles>=23.2.0

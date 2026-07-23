@@ -1,0 +1,119 @@
+# ============================================================
+# GSEA Dashboard — GitHub Actions CI Pipeline
+# Runs on every push and pull request to main/develop
+# ============================================================
+name: GSEA Dashboard CI
+
+on:
+  push:
+    branches: [ main, develop ]
+  pull_request:
+    branches: [ main, develop ]
+
+jobs:
+  test:
+    name: Test Suite (Python ${{ matrix.python-version }})
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        python-version: ["3.11", "3.12"]
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python ${{ matrix.python-version }}
+        uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+          cache: "pip"
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install pytest pytest-asyncio pytest-cov httpx fastapi pydantic pydantic-settings python-multipart pandas numpy plotly python-dotenv
+
+      - name: Generate sample data
+        run: python scripts/generate_sample_data.py
+
+      - name: Run unit tests with coverage
+        run: |
+          python -m pytest tests/unit/ tests/integration/ \
+            -v \
+            --tb=short \
+            --cov=backend/services \
+            --cov=nlp/pipelines \
+            --cov=frontend/components \
+            --cov-report=term-missing \
+            --cov-report=xml:coverage.xml \
+            --cov-fail-under=75
+
+      - name: Upload coverage report
+        uses: codecov/codecov-action@v4
+        if: matrix.python-version == '3.12'
+        with:
+          files: coverage.xml
+          flags: unittests
+          fail_ci_if_error: false
+
+  lint:
+    name: Lint & Syntax Check
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Syntax check all Python files
+        run: |
+          echo "Checking syntax of all Python source files..."
+          find . -name "*.py" \
+            -not -path "./.git/*" \
+            -not -path "./venv/*" \
+            -not -path "./.venv/*" \
+            | while read f; do
+                python -m py_compile "$f" && echo "  OK  $f" || { echo "  ERR $f"; exit 1; }
+              done
+          echo "All files pass syntax check."
+
+  sample-data:
+    name: Sample Data Generation
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install minimal deps
+        run: pip install pandas numpy
+
+      - name: Generate and validate sample data
+        run: |
+          python scripts/generate_sample_data.py
+          python -c "
+          import pandas as pd, sys
+          errors = []
+          for name, path in [
+              ('GMT',        'data/sample/gmt_sample.csv'),
+              ('CodeCarbon', 'data/sample/codecarbon_sample.csv'),
+              ('SCI History','data/sample/sci_history.csv'),
+          ]:
+              df = pd.read_csv(path)
+              if df.empty:
+                  errors.append(f'{name}: empty')
+              elif len(df) < 5:
+                  errors.append(f'{name}: too few rows ({len(df)})')
+              else:
+                  print(f'  OK  {name}: {len(df)} rows, {len(df.columns)} columns')
+          if errors:
+              print('ERRORS:', errors); sys.exit(1)
+          print('All sample files valid.')
+          "
