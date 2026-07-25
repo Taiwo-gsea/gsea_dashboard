@@ -62,16 +62,24 @@ html,body,[data-testid="stAppViewContainer"]{background-color:#0D1117!important;
 .p-badge.amber{background:rgba(227,179,65,.12);color:#E3B341}
 
 /* ── KPI card ── */
-.kpi-card{background:#161B22;border:1px solid #21262D;border-radius:10px;padding:1rem 1.1rem}
+.kpi-card{background:#161B22;border:1px solid #21262D;border-radius:12px;padding:1.15rem 1.3rem;transition:border-color .15s}
+.kpi-card:hover{border-color:#3B3F8C}
+.kpi-icon-row{display:flex;align-items:center;gap:7px;margin-bottom:.8rem}
+.kpi-icon{width:22px;height:22px;border-radius:6px;background:rgba(124,127,242,.14);display:flex;align-items:center;justify-content:center;font-size:12px;flex-shrink:0}
 .kpi-label{font-size:.68rem;color:#7D8590;text-transform:uppercase;letter-spacing:.07em;margin-bottom:.35rem;font-weight:500}
+.kpi-label-plain{font-size:.82rem;color:#8B949E;font-weight:500}
 .kpi-value{font-size:1.75rem;font-weight:700;color:#00D4FF;letter-spacing:-.02em;line-height:1}
 .kpi-value.green{color:#3FB950}
 .kpi-value.amber{color:#E3B341}
 .kpi-value.white{color:#E6EDF3}
 .kpi-value.muted{color:#7D8590;font-size:1.2rem}
+.kpi-value-row{display:flex;align-items:baseline;gap:.55rem;flex-wrap:wrap}
 .kpi-sub{font-size:.68rem;color:#7D8590;margin-top:.3rem}
 .delta-up{color:#3FB950;font-size:.68rem}
 .delta-dn{color:#F85149;font-size:.68rem}
+.trend-badge{display:inline-flex;align-items:center;gap:2px;font-size:.68rem;font-weight:600;padding:2px 7px;border-radius:6px}
+.trend-badge.up{background:rgba(63,185,80,.14);color:#3FB950}
+.trend-badge.dn{background:rgba(248,81,73,.14);color:#F85149}
 
 /* ── Status badges ── */
 .badge{display:inline-block;padding:2px 8px;border-radius:10px;font-size:.68rem;font-weight:600}
@@ -257,35 +265,43 @@ def render_home():
     ds_label = ("dataset" + ("s" if n_datasets != 1 else "") + " loaded"
                 if n_datasets else "Upload via Data Ingestion")
 
+    sci_badge = ""
+    if all_scores:
+        good = (sum(all_scores) / len(all_scores)) < 50
+        sci_badge = (
+            '<span class="trend-badge up">▲ Good</span>' if good
+            else '<span class="trend-badge dn">▼ High</span>'
+        )
+
     k1, k2, k3, k4 = st.columns(4)
     with k1:
         st.markdown(f"""
-        <div class="kpi-card">
-            <div class="kpi-label">Mean SCI Score</div>
-            <div class="{sci_class}">{mean_sci}</div>
-            <div class="kpi-sub">{"gCO₂eq / request" if all_scores else "Calculate or upload data"}</div>
-        </div>""", unsafe_allow_html=True)
+            <div class="kpi-card">
+                <div class="kpi-icon-row"><div class="kpi-icon">📊</div><div class="kpi-label-plain">Mean SCI Score</div></div>
+                <div class="kpi-value-row"><span class="{sci_class}">{mean_sci}</span>{sci_badge}</div>
+                <div class="kpi-sub">{"gCO₂eq / request" if all_scores else "Calculate or upload data"}</div>
+            </div>""", unsafe_allow_html=True)
     with k2:
         st.markdown(f"""
-        <div class="kpi-card">
-            <div class="kpi-label">Total Energy (kWh)</div>
-            <div class="kpi-value white">{energy_str}</div>
-            <div class="kpi-sub">{"Across all ingested datasets" if total_energy else "Upload data to measure"}</div>
-        </div>""", unsafe_allow_html=True)
+            <div class="kpi-card">
+                <div class="kpi-icon-row"><div class="kpi-icon">⚡</div><div class="kpi-label-plain">Total Energy</div></div>
+                <div class="kpi-value-row"><span class="kpi-value white">{energy_str}</span></div>
+                <div class="kpi-sub">{"kWh across all ingested datasets" if total_energy else "Upload data to measure"}</div>
+            </div>""", unsafe_allow_html=True)
     with k3:
         st.markdown(f"""
-        <div class="kpi-card">
-            <div class="kpi-label">Total Carbon (gCO₂eq)</div>
-            <div class="kpi-value green">{carbon_str}</div>
-            <div class="kpi-sub">{"Operational + embodied" if total_carbon else "Upload data to measure"}</div>
-        </div>""", unsafe_allow_html=True)
+            <div class="kpi-card">
+                <div class="kpi-icon-row"><div class="kpi-icon">🌍</div><div class="kpi-label-plain">Total Carbon</div></div>
+                <div class="kpi-value-row"><span class="kpi-value green">{carbon_str}</span></div>
+                <div class="kpi-sub">{"gCO₂eq — operational + embodied" if total_carbon else "Upload data to measure"}</div>
+            </div>""", unsafe_allow_html=True)
     with k4:
         st.markdown(f"""
-        <div class="kpi-card">
-            <div class="kpi-label">Datasets Ingested</div>
-            <div class="kpi-value amber">{n_str}</div>
-            <div class="kpi-sub">{ds_label}</div>
-        </div>""", unsafe_allow_html=True)
+            <div class="kpi-card">
+                <div class="kpi-icon-row"><div class="kpi-icon">📁</div><div class="kpi-label-plain">Datasets Ingested</div></div>
+                <div class="kpi-value-row"><span class="kpi-value amber">{n_str}</span></div>
+                <div class="kpi-sub">{ds_label}</div>
+            </div>""", unsafe_allow_html=True)
 
     st.markdown("<br>", unsafe_allow_html=True)
 
@@ -307,19 +323,23 @@ def render_home():
                 x=list(range(len(all_scores))),
                 y=all_scores,
                 fill='tozeroy',
-                line=dict(color='#00D4FF', width=2),
-                fillcolor='rgba(0,212,255,0.08)',
+                mode='lines+markers',
+                line=dict(color='#7C7FF2', width=2.5, shape='spline', smoothing=0.8),
+                marker=dict(size=4, color='#7C7FF2'),
+                fillcolor='rgba(124,127,242,0.14)',
                 hovertemplate='Reading %{x}: %{y:.4f} gCO₂eq/req<extra></extra>'
             ))
             fig.update_layout(
-                height=200, margin=dict(t=8, b=30, l=50, r=10),
+                height=220, margin=dict(t=8, b=30, l=50, r=10),
                 plot_bgcolor='rgba(0,0,0,0)', paper_bgcolor='rgba(0,0,0,0)',
                 xaxis=dict(showgrid=False, color='#7D8590',
                            tickfont=dict(size=10), title="Reading #"),
-                yaxis=dict(showgrid=True, gridcolor='#21262D',
+                yaxis=dict(showgrid=True, gridcolor='#1C2128',
                            color='#7D8590', tickfont=dict(size=10),
                            title="SCI"),
                 showlegend=False,
+                hoverlabel=dict(bgcolor='#161B22', bordercolor='#30363D',
+                                font=dict(color='#E6EDF3', size=11)),
             )
             st.plotly_chart(fig, config={'displayModeBar': False})
         else:
