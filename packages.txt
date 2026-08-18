@@ -1,3 +1,0 @@
-# System packages required by Streamlit Community Cloud (Ubuntu)
-# numpy / pandas C extensions need these
-build-essential
