@@ -1,0 +1,83 @@
+<svg viewBox="0 0 720 500" xmlns="http://www.w3.org/2000/svg" font-family="monospace">
+<title>GSEA Dashboard — Database Schema (ERD)</title>
+<rect width="720" height="500" fill="white"/>
+<text x="360" y="22" text-anchor="middle" font-family="sans-serif" font-size="14" font-weight="600" fill="#0072B2">GSEA Dashboard — Database Schema</text>
+
+<!-- sci_measurements table -->
+<rect x="30" y="40" width="220" height="310" rx="6" fill="#EAF3DE" stroke="#639922" stroke-width="1.2"/>
+<rect x="30" y="40" width="220" height="28" rx="6" fill="#639922"/>
+<text x="140" y="59" text-anchor="middle" font-size="12" font-weight="600" fill="white">sci_measurements</text>
+<text x="44"  y="84"  font-size="10" fill="#111">🔑 id              INTEGER PK</text>
+<text x="44"  y="100" font-size="10" fill="#111">   created_at       DATETIME</text>
+<text x="44"  y="116" font-size="10" fill="#555">── SCI Components ─────────</text>
+<text x="44"  y="132" font-size="10" fill="#111">   energy_kwh       FLOAT</text>
+<text x="44"  y="148" font-size="10" fill="#111">   carbon_intensity  FLOAT</text>
+<text x="44"  y="164" font-size="10" fill="#111">   embodied_carbon   FLOAT</text>
+<text x="44"  y="180" font-size="10" fill="#111">   functional_unit   FLOAT</text>
+<text x="44"  y="196" font-size="10" fill="#111">   functional_unit_label VARCHAR</text>
+<text x="44"  y="212" font-size="10" fill="#555">── Computed Results ────────</text>
+<text x="44"  y="228" font-size="10" fill="#111">   sci_score         FLOAT</text>
+<text x="44"  y="244" font-size="10" fill="#111">   operational_carbon FLOAT</text>
+<text x="44"  y="260" font-size="10" fill="#111">   total_carbon      FLOAT</text>
+<text x="44"  y="276" font-size="10" fill="#555">── Metadata ────────────────</text>
+<text x="44"  y="292" font-size="10" fill="#111">   software_component VARCHAR</text>
+<text x="44"  y="308" font-size="10" fill="#111">   region            VARCHAR</text>
+<text x="44"  y="324" font-size="10" fill="#111">   source            VARCHAR</text>
+<text x="44"  y="340" font-size="10" fill="#111">   notes             TEXT</text>
+
+<!-- proxy_metric_snapshots table -->
+<rect x="290" y="40" width="210" height="270" rx="6" fill="#FAEEDA" stroke="#BA7517" stroke-width="1.2"/>
+<rect x="290" y="40" width="210" height="28" rx="6" fill="#BA7517"/>
+<text x="395" y="59" text-anchor="middle" font-size="12" font-weight="600" fill="white">proxy_metric_snapshots</text>
+<text x="304" y="84"  font-size="10" fill="#111">🔑 id                INTEGER PK</text>
+<text x="304" y="100" font-size="10" fill="#111">🔗 sci_measurement_id INTEGER FK</text>
+<text x="304" y="116" font-size="10" fill="#111">   timestamp          DATETIME</text>
+<text x="304" y="132" font-size="10" fill="#555">── Proxy Metrics ───────────</text>
+<text x="304" y="148" font-size="10" fill="#111">   cpu_percent        FLOAT</text>
+<text x="304" y="164" font-size="10" fill="#111">   memory_gb          FLOAT</text>
+<text x="304" y="180" font-size="10" fill="#111">   memory_percent     FLOAT</text>
+<text x="304" y="196" font-size="10" fill="#111">   network_rx_mb      FLOAT</text>
+<text x="304" y="212" font-size="10" fill="#111">   network_tx_mb      FLOAT</text>
+<text x="304" y="228" font-size="10" fill="#111">   disk_read_mb       FLOAT</text>
+<text x="304" y="244" font-size="10" fill="#111">   power_watts        FLOAT</text>
+<text x="304" y="260" font-size="10" fill="#111">   process_name       VARCHAR</text>
+<text x="304" y="276" font-size="10" fill="#111">   source             VARCHAR</text>
+
+<!-- nlp_extraction_results table -->
+<rect x="540" y="40" width="160" height="260" rx="6" fill="#FBEAF0" stroke="#D4537E" stroke-width="1.2"/>
+<rect x="540" y="40" width="160" height="28" rx="6" fill="#D4537E"/>
+<text x="620" y="59" text-anchor="middle" font-size="11" font-weight="600" fill="white">nlp_extraction_results</text>
+<text x="554" y="84"  font-size="10" fill="#111">🔑 id              INTEGER PK</text>
+<text x="554" y="100" font-size="10" fill="#111">   extracted_at      DATETIME</text>
+<text x="554" y="116" font-size="10" fill="#111">   source_filename   VARCHAR</text>
+<text x="554" y="132" font-size="10" fill="#555">── Entity ──────────────</text>
+<text x="554" y="148" font-size="10" fill="#111">   entity_type       VARCHAR</text>
+<text x="554" y="164" font-size="10" fill="#111">   entity_text       VARCHAR</text>
+<text x="554" y="180" font-size="10" fill="#111">   entity_value      FLOAT</text>
+<text x="554" y="196" font-size="10" fill="#111">   confidence_score  FLOAT</text>
+<text x="554" y="212" font-size="10" fill="#555">── Validation ──────────</text>
+<text x="554" y="228" font-size="10" fill="#111">   validated         BOOLEAN</text>
+<text x="554" y="244" font-size="10" fill="#111">   accepted          BOOLEAN</text>
+<text x="554" y="260" font-size="10" fill="#111">   correction        TEXT</text>
+
+<!-- data_ingestion_logs table -->
+<rect x="290" y="345" width="210" height="140" rx="6" fill="#E6F1FB" stroke="#378ADD" stroke-width="1.2"/>
+<rect x="290" y="345" width="210" height="28" rx="6" fill="#378ADD"/>
+<text x="395" y="364" text-anchor="middle" font-size="12" font-weight="600" fill="white">data_ingestion_logs</text>
+<text x="304" y="389" font-size="10" fill="#111">🔑 id                INTEGER PK</text>
+<text x="304" y="405" font-size="10" fill="#111">   ingested_at        DATETIME</text>
+<text x="304" y="421" font-size="10" fill="#111">   source_type        VARCHAR</text>
+<text x="304" y="437" font-size="10" fill="#111">   filename           VARCHAR</text>
+<text x="304" y="453" font-size="10" fill="#111">   records_imported   INTEGER</text>
+<text x="304" y="469" font-size="10" fill="#111">   status             VARCHAR</text>
+
+<!-- Relationships -->
+<!-- sci_measurements 1──* proxy_metric_snapshots -->
+<line x1="250" y1="160" x2="290" y2="140" stroke="#555" stroke-width="1.2"/>
+<text x="258" y="148" font-family="sans-serif" font-size="9" fill="#555">1</text>
+<text x="280" y="133" font-family="sans-serif" font-size="9" fill="#555">*</text>
+<text x="257" y="158" font-family="sans-serif" font-size="8" fill="#888" font-style="italic">has</text>
+
+<!-- Cardinality labels -->
+<text x="360" y="490" text-anchor="middle" font-family="sans-serif" font-size="10" fill="#888">🔑 PK = Primary Key  ·  🔗 FK = Foreign Key  ·  Indexed: created_at, software_component, region, entity_type</text>
+</svg>
