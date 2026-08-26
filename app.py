@@ -20,7 +20,7 @@ st.set_page_config(
 )
 
 # ── Global dark theme CSS ──────────────────────────────────────────────────
-st.markdown("""
+st.html("""
 <style>
 *{box-sizing:border-box;margin:0;padding:0}
 html,body,[data-testid="stAppViewContainer"]{background-color:#0D1117!important;color:#E6EDF3!important;font-family:'Inter','Segoe UI',sans-serif}
@@ -172,7 +172,8 @@ div[data-testid="column"] button[kind="secondary"]:hover{border-color:#00D4FF!im
 
 hr{border-color:#21262D!important}
 </style>
-""", unsafe_allow_html=True)
+""")
+
 
 
 # ── Sidebar ────────────────────────────────────────────────────────────────
