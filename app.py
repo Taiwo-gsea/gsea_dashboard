@@ -20,6 +20,7 @@ st.set_page_config(
 )
 
 # ── Global dark theme CSS ──────────────────────────────────────────────────
+st.error("🔴 DEPLOY TEST MARKER — if you see this, the file is current")
 st.html("""
 <style>
 *{box-sizing:border-box;margin:0;padding:0}
