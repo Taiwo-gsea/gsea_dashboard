@@ -9,173 +9,6 @@ import sys, subprocess
 from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).parent))
-
-# ── Page config ────────────────────────────────────────────────────────────
-st.set_page_config(
-    page_title="GSEA Dashboard",
-    page_icon="🌿",
-    layout="wide",
-    initial_sidebar_state="expanded",
-    menu_items={"About": "GSEA Dashboard — Green Software Engineering Analysis\nISO/IEC 21031 SCI = (E × I + M) / R"}
-)
-
-# ── Global dark theme CSS ──────────────────────────────────────────────────
-st.markdown("""
-<style>
-*{box-sizing:border-box;margin:0;padding:0}
-html,body,[data-testid="stAppViewContainer"]{background-color:#0D1117!important;color:#E6EDF3!important;font-family:'Inter','Segoe UI',sans-serif}
-#MainMenu,footer,header{visibility:hidden}
-[data-testid="stToolbar"],.stDeployButton{display:none}
-
-/* ── Sidebar ── */
-[data-testid="stSidebar"]{background-color:#0D1117!important;border-right:1px solid #21262D!important;min-width:224px!important;max-width:224px!important}
-[data-testid="stSidebar"]>div:first-child{padding-top:0;padding-left:0;padding-right:0}
-.sb-brand{display:flex;align-items:center;gap:10px;padding:.9rem 1.2rem 1rem;border-bottom:1px solid #21262D;margin-bottom:.4rem}
-.sb-icon{width:32px;height:32px;border-radius:8px;background:linear-gradient(135deg,#00D4FF,#0094FF);display:flex;align-items:center;justify-content:center;font-size:16px;font-weight:700;color:#0D1117;flex-shrink:0}
-.sb-name{font-size:.92rem;font-weight:600;color:#E6EDF3;letter-spacing:-.01em}
-.sb-sub{font-size:.68rem;color:#7D8590;margin-top:1px}
-.sb-section{font-size:.62rem;font-weight:600;color:#7D8590;text-transform:uppercase;letter-spacing:.08em;padding:.7rem 1.2rem .25rem}
-.sb-formula{margin:.6rem 1rem 0;background:#161B22;border:1px solid #21262D;border-radius:8px;padding:.75rem}
-.sb-formula-title{font-size:.62rem;color:#7D8590;text-transform:uppercase;letter-spacing:.06em;margin-bottom:.35rem}
-.sb-formula-eq{font-family:monospace;font-size:.82rem;color:#00D4FF;font-weight:600}
-.sb-formula-vars{font-size:.62rem;color:#7D8590;margin-top:.35rem;line-height:1.6}
-.sb-footer{margin:.8rem 1rem 0;padding-top:.7rem;border-top:1px solid #21262D}
-.sb-footer-text{font-size:.62rem;color:#7D8590;line-height:1.6}
-
-/* ── Main content ── */
-.main .block-container{padding:1.2rem 1.5rem 2rem!important;max-width:100%!important;background-color:#0D1117!important}
-
-/* ── Page header ── */
-.page-header{display:flex;align-items:center;justify-content:space-between;padding-bottom:1rem;border-bottom:1px solid #21262D;margin-bottom:1.2rem}
-.page-header-left{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
-.page-title{font-size:1.05rem;font-weight:600;color:#E6EDF3;letter-spacing:-.01em}
-.ph-tab{padding:.28rem .85rem;border-radius:6px;font-size:.78rem;font-weight:500}
-.ph-tab.active{background:#00D4FF;color:#0D1117}
-.ph-tab.inactive{background:#21262D;color:#7D8590}
-
-/* ── Panel / Card ── */
-.panel{background:#161B22;border:1px solid #21262D;border-radius:10px;padding:1.1rem 1.2rem;margin-bottom:1rem}
-.panel-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:.85rem}
-.panel-title{font-size:.88rem;font-weight:600;color:#E6EDF3}
-.p-badge{background:#21262D;color:#7D8590;font-size:.68rem;padding:2px 8px;border-radius:12px}
-.p-badge.green{background:rgba(0,212,255,.12);color:#00D4FF}
-.p-badge.amber{background:rgba(227,179,65,.12);color:#E3B341}
-
-/* ── KPI card ── */
-.kpi-card{background:#161B22;border:1px solid #21262D;border-radius:12px;padding:1.15rem 1.3rem;transition:border-color .15s}
-.kpi-card:hover{border-color:#3B3F8C}
-.kpi-icon-row{display:flex;align-items:center;gap:7px;margin-bottom:.8rem}
-.kpi-icon{width:22px;height:22px;border-radius:6px;background:rgba(124,127,242,.14);display:flex;align-items:center;justify-content:center;font-size:12px;flex-shrink:0}
-.kpi-label{font-size:.68rem;color:#7D8590;text-transform:uppercase;letter-spacing:.07em;margin-bottom:.35rem;font-weight:500}
-.kpi-label-plain{font-size:.82rem;color:#8B949E;font-weight:500}
-.kpi-value{font-size:1.75rem;font-weight:700;color:#00D4FF;letter-spacing:-.02em;line-height:1}
-.kpi-value.green{color:#3FB950}
-.kpi-value.amber{color:#E3B341}
-.kpi-value.white{color:#E6EDF3}
-.kpi-value.muted{color:#7D8590;font-size:1.2rem}
-.kpi-value-row{display:flex;align-items:baseline;gap:.55rem;flex-wrap:wrap}
-.kpi-sub{font-size:.68rem;color:#7D8590;margin-top:.3rem}
-.delta-up{color:#3FB950;font-size:.68rem}
-.delta-dn{color:#F85149;font-size:.68rem}
-.trend-badge{display:inline-flex;align-items:center;gap:2px;font-size:.68rem;font-weight:600;padding:2px 7px;border-radius:6px}
-.trend-badge.up{background:rgba(63,185,80,.14);color:#3FB950}
-.trend-badge.dn{background:rgba(248,81,73,.14);color:#F85149}
-
-/* ── Status badges ── */
-.badge{display:inline-block;padding:2px 8px;border-radius:10px;font-size:.68rem;font-weight:600}
-.badge-green{background:rgba(63,185,80,.12);color:#3FB950}
-.badge-red{background:rgba(248,81,73,.12);color:#F85149}
-.badge-amber{background:rgba(227,179,65,.12);color:#E3B341}
-.badge-cyan{background:rgba(0,212,255,.12);color:#00D4FF}
-.badge-grey{background:rgba(125,133,144,.12);color:#7D8590}
-
-/* ── Hero (Home landing) ── */
-.hero{padding:2.2rem 0 1.8rem;position:relative}
-.hero-eyebrow{display:inline-flex;align-items:center;gap:6px;font-size:.68rem;font-weight:600;color:#00D4FF;text-transform:uppercase;letter-spacing:.1em;margin-bottom:1rem}
-.hero-eyebrow::before{content:"";width:6px;height:6px;border-radius:50%;background:#3FB950;box-shadow:0 0 0 3px rgba(63,185,80,.15)}
-.hero-title{font-size:2.35rem;font-weight:700;color:#E6EDF3;letter-spacing:-.03em;line-height:1.12;margin-bottom:.85rem;max-width:640px}
-.hero-title em{color:#00D4FF;font-style:normal}
-.hero-sub{font-size:.95rem;color:#8B949E;line-height:1.6;max-width:560px;margin-bottom:1.9rem;font-weight:400}
-.hero-grid{display:grid;grid-template-columns:1.15fr 1fr;gap:1.4rem;align-items:stretch;margin-bottom:.4rem}
-@media(max-width:900px){.hero-grid{grid-template-columns:1fr}}
-
-/* Formula instrument panel — the signature element */
-.instrument{background:linear-gradient(180deg,#161B22 0%,#12161C 100%);border:1px solid #21262D;border-radius:14px;padding:1.5rem 1.6rem 1.3rem;position:relative;overflow:hidden}
-.instrument-label{font-size:.62rem;font-weight:600;color:#7D8590;text-transform:uppercase;letter-spacing:.09em;margin-bottom:.7rem}
-.instrument-eq{font-family:'JetBrains Mono','SF Mono',monospace;font-size:1.55rem;font-weight:600;color:#E6EDF3;letter-spacing:-.01em;margin-bottom:1rem}
-.instrument-eq .var-e{color:#00D4FF}
-.instrument-eq .var-i{color:#E3B341}
-.instrument-eq .var-m{color:#F85149}
-.instrument-eq .var-r{color:#3FB950}
-.instrument-bar{height:4px;border-radius:4px;background:linear-gradient(90deg,#3FB950 0%,#E3B341 50%,#F85149 100%);margin-bottom:.65rem;opacity:.85}
-.instrument-caption{font-size:.68rem;color:#7D8590;display:flex;justify-content:space-between;align-items:center}
-.instrument-caption .std{font-weight:600;color:#8B949E}
-
-/* Context panel beside the instrument */
-.hero-context{background:#161B22;border:1px solid #21262D;border-radius:14px;padding:1.5rem 1.6rem;display:flex;flex-direction:column;justify-content:center;gap:1rem}
-.hc-row{display:flex;align-items:flex-start;gap:.7rem}
-.hc-dot{width:7px;height:7px;border-radius:50%;margin-top:.45rem;flex-shrink:0}
-.hc-text{font-size:.8rem;color:#8B949E;line-height:1.5}
-.hc-text strong{color:#E6EDF3;font-weight:600}
-
-/* Polished CTA row */
-.hero-cta-row{display:flex;gap:.6rem;margin-top:1.5rem;flex-wrap:wrap}
-div[data-testid="column"] button[kind="primary"]{background:#00D4FF!important;border:1px solid #00D4FF!important;color:#0D1117!important;font-weight:600!important;box-shadow:0 0 0 0 rgba(0,212,255,.4)!important;transition:box-shadow .15s,transform .15s!important}
-div[data-testid="column"] button[kind="primary"]:hover{box-shadow:0 0 0 4px rgba(0,212,255,.15)!important;transform:translateY(-1px)}
-div[data-testid="column"] button[kind="secondary"]{background:#161B22!important;border:1px solid #30363D!important;color:#C9D1D9!important;font-weight:500!important;transition:border-color .15s,transform .15s!important}
-div[data-testid="column"] button[kind="secondary"]:hover{border-color:#00D4FF!important;color:#00D4FF!important;transform:translateY(-1px)}
-.hero-divider{height:1px;background:linear-gradient(90deg,#21262D 0%,#21262D 60%,transparent 100%);margin:2rem 0 1.6rem}
-
-/* ── Progress bar ── */
-.pb-bg{background:#21262D;border-radius:4px;height:5px;overflow:hidden;margin-top:5px}
-.pb-fill{height:100%;border-radius:4px;background:linear-gradient(90deg,#00D4FF,#0094FF)}
-.pb-fill.green{background:linear-gradient(90deg,#3FB950,#26A641)}
-.pb-fill.amber{background:#E3B341}
-.pb-fill.red{background:#F85149}
-
-/* ── Widgets ── */
-.stSelectbox>div>div,.stTextInput>div>div>input,.stNumberInput>div>div>input,.stTextArea>div>div>textarea{background-color:#21262D!important;border:1px solid #30363D!important;color:#E6EDF3!important;border-radius:6px!important}
-.stSelectbox label,.stTextInput label,.stNumberInput label,.stTextArea label,.stSlider label,.stRadio label,.stMultiSelect label{color:#7D8590!important;font-size:.78rem!important}
-.stButton>button{background:#21262D!important;border:1px solid #30363D!important;color:#E6EDF3!important;border-radius:6px!important;font-size:.8rem!important;font-weight:500!important;padding:.4rem 1rem!important;transition:all .15s!important}
-.stButton>button:hover{background:#30363D!important;border-color:#00D4FF!important;color:#00D4FF!important}
-[data-testid="baseButton-primary"]{background:linear-gradient(135deg,#00D4FF,#0094FF)!important;border:none!important;color:#0D1117!important;font-weight:600!important}
-[data-testid="baseButton-primary"]:hover{opacity:.9!important;color:#0D1117!important}
-
-/* ── Tabs ── */
-.stTabs [data-baseweb="tab-list"]{background:transparent!important;border-bottom:1px solid #21262D!important;gap:0!important}
-.stTabs [data-baseweb="tab"]{background:transparent!important;color:#7D8590!important;border:none!important;border-bottom:2px solid transparent!important;font-size:.8rem!important;font-weight:500!important;padding:.5rem 1.1rem!important;border-radius:0!important}
-.stTabs [aria-selected="true"]{color:#00D4FF!important;border-bottom-color:#00D4FF!important;background:transparent!important}
-
-/* ── Expanders ── */
-.streamlit-expanderHeader{background:#161B22!important;border:1px solid #21262D!important;border-radius:8px!important;color:#E6EDF3!important;font-size:.82rem!important}
-.streamlit-expanderContent{background:#161B22!important;border:1px solid #21262D!important;border-top:none!important;border-radius:0 0 8px 8px!important}
-
-/* ── File uploader ── */
-[data-testid="stFileUploader"]{background:#161B22!important;border:1px dashed #30363D!important;border-radius:8px!important}
-[data-testid="stFileUploader"]:hover{border-color:#00D4FF!important}
-
-/* ── Metrics ── */
-[data-testid="stMetricValue"]{color:#00D4FF!important;font-size:1.55rem!important;font-weight:700!important}
-[data-testid="stMetricLabel"]{color:#7D8590!important;font-size:.72rem!important}
-
-/* ── Alerts ── */
-.stAlert{background:#161B22!important;border-radius:8px!important}
-
-/* ── Scrollbar ── */
-::-webkit-scrollbar{width:5px;height:5px}
-::-webkit-scrollbar-track{background:#0D1117}
-::-webkit-scrollbar-thumb{background:#30363D;border-radius:3px}
-::-webkit-scrollbar-thumb:hover{background:#484F58}
-
-/* ── Toggle ── */
-.stToggle>label>div[role="switch"][aria-checked="true"]{background:#00D4FF!important}
-
-hr{border-color:#21262D!important}
-</style>
-""", unsafe_allow_html=True)
-
-
-
 # ── Sidebar ────────────────────────────────────────────────────────────────
 def render_sidebar():
     with st.sidebar:
@@ -532,14 +365,173 @@ def render_home():
             </div>""", unsafe_allow_html=True)
     st.markdown("</div>", unsafe_allow_html=True)
 
-
-# ── Page router ────────────────────────────────────────────────────────────
 def main():
-    # Fix: consume any button-triggered navigation request BEFORE the
+ # ── Page config (must run first, every execution) ──────────────────────
+    st.set_page_config(
+        page_title="GSEA Dashboard",
+        page_icon="🌿",
+        layout="wide",
+        initial_sidebar_state="expanded",
+        menu_items={"About": "GSEA Dashboard — Green Software Engineering Analysis\nISO/IEC 21031 SCI = (E × I + M) / R"}
+    )
+
+    # ── Global dark theme CSS (must run every execution, not just on import) ──
+    st.markdown("""
+    <style>
+    *{box-sizing:border-box;margin:0;padding:0}
+    html,body,[data-testid="stAppViewContainer"]{background-color:#0D1117!important;color:#E6EDF3!important;font-family:'Inter','Segoe UI',sans-serif}
+    #MainMenu,footer,header{visibility:hidden}
+    [data-testid="stToolbar"],.stDeployButton{display:none}
+
+    /* ── Sidebar ── */
+    [data-testid="stSidebar"]{background-color:#0D1117!important;border-right:1px solid #21262D!important;min-width:224px!important;max-width:224px!important}
+    [data-testid="stSidebar"]>div:first-child{padding-top:0;padding-left:0;padding-right:0}
+    .sb-brand{display:flex;align-items:center;gap:10px;padding:.9rem 1.2rem 1rem;border-bottom:1px solid #21262D;margin-bottom:.4rem}
+    .sb-icon{width:32px;height:32px;border-radius:8px;background:linear-gradient(135deg,#00D4FF,#0094FF);display:flex;align-items:center;justify-content:center;font-size:16px;font-weight:700;color:#0D1117;flex-shrink:0}
+    .sb-name{font-size:.92rem;font-weight:600;color:#E6EDF3;letter-spacing:-.01em}
+    .sb-sub{font-size:.68rem;color:#7D8590;margin-top:1px}
+    .sb-section{font-size:.62rem;font-weight:600;color:#7D8590;text-transform:uppercase;letter-spacing:.08em;padding:.7rem 1.2rem .25rem}
+    .sb-formula{margin:.6rem 1rem 0;background:#161B22;border:1px solid #21262D;border-radius:8px;padding:.75rem}
+    .sb-formula-title{font-size:.62rem;color:#7D8590;text-transform:uppercase;letter-spacing:.06em;margin-bottom:.35rem}
+    .sb-formula-eq{font-family:monospace;font-size:.82rem;color:#00D4FF;font-weight:600}
+    .sb-formula-vars{font-size:.62rem;color:#7D8590;margin-top:.35rem;line-height:1.6}
+    .sb-footer{margin:.8rem 1rem 0;padding-top:.7rem;border-top:1px solid #21262D}
+    .sb-footer-text{font-size:.62rem;color:#7D8590;line-height:1.6}
+
+    /* ── Main content ── */
+    .main .block-container{padding:1.2rem 1.5rem 2rem!important;max-width:100%!important;background-color:#0D1117!important}
+
+    /* ── Page header ── */
+    .page-header{display:flex;align-items:center;justify-content:space-between;padding-bottom:1rem;border-bottom:1px solid #21262D;margin-bottom:1.2rem}
+    .page-header-left{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+    .page-title{font-size:1.05rem;font-weight:600;color:#E6EDF3;letter-spacing:-.01em}
+    .ph-tab{padding:.28rem .85rem;border-radius:6px;font-size:.78rem;font-weight:500}
+    .ph-tab.active{background:#00D4FF;color:#0D1117}
+    .ph-tab.inactive{background:#21262D;color:#7D8590}
+
+    /* ── Panel / Card ── */
+    .panel{background:#161B22;border:1px solid #21262D;border-radius:10px;padding:1.1rem 1.2rem;margin-bottom:1rem}
+    .panel-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:.85rem}
+    .panel-title{font-size:.88rem;font-weight:600;color:#E6EDF3}
+    .p-badge{background:#21262D;color:#7D8590;font-size:.68rem;padding:2px 8px;border-radius:12px}
+    .p-badge.green{background:rgba(0,212,255,.12);color:#00D4FF}
+    .p-badge.amber{background:rgba(227,179,65,.12);color:#E3B341}
+
+    /* ── KPI card ── */
+    .kpi-card{background:#161B22;border:1px solid #21262D;border-radius:12px;padding:1.15rem 1.3rem;transition:border-color .15s}
+    .kpi-card:hover{border-color:#3B3F8C}
+    .kpi-icon-row{display:flex;align-items:center;gap:7px;margin-bottom:.8rem}
+    .kpi-icon{width:22px;height:22px;border-radius:6px;background:rgba(124,127,242,.14);display:flex;align-items:center;justify-content:center;font-size:12px;flex-shrink:0}
+    .kpi-label{font-size:.68rem;color:#7D8590;text-transform:uppercase;letter-spacing:.07em;margin-bottom:.35rem;font-weight:500}
+    .kpi-label-plain{font-size:.82rem;color:#8B949E;font-weight:500}
+    .kpi-value{font-size:1.75rem;font-weight:700;color:#00D4FF;letter-spacing:-.02em;line-height:1}
+    .kpi-value.green{color:#3FB950}
+    .kpi-value.amber{color:#E3B341}
+    .kpi-value.white{color:#E6EDF3}
+    .kpi-value.muted{color:#7D8590;font-size:1.2rem}
+    .kpi-value-row{display:flex;align-items:baseline;gap:.55rem;flex-wrap:wrap}
+    .kpi-sub{font-size:.68rem;color:#7D8590;margin-top:.3rem}
+    .delta-up{color:#3FB950;font-size:.68rem}
+    .delta-dn{color:#F85149;font-size:.68rem}
+    .trend-badge{display:inline-flex;align-items:center;gap:2px;font-size:.68rem;font-weight:600;padding:2px 7px;border-radius:6px}
+    .trend-badge.up{background:rgba(63,185,80,.14);color:#3FB950}
+    .trend-badge.dn{background:rgba(248,81,73,.14);color:#F85149}
+
+    /* ── Status badges ── */
+    .badge{display:inline-block;padding:2px 8px;border-radius:10px;font-size:.68rem;font-weight:600}
+    .badge-green{background:rgba(63,185,80,.12);color:#3FB950}
+    .badge-red{background:rgba(248,81,73,.12);color:#F85149}
+    .badge-amber{background:rgba(227,179,65,.12);color:#E3B341}
+    .badge-cyan{background:rgba(0,212,255,.12);color:#00D4FF}
+    .badge-grey{background:rgba(125,133,144,.12);color:#7D8590}
+
+    /* ── Hero (Home landing) ── */
+    .hero{padding:2.2rem 0 1.8rem;position:relative}
+    .hero-eyebrow{display:inline-flex;align-items:center;gap:6px;font-size:.68rem;font-weight:600;color:#00D4FF;text-transform:uppercase;letter-spacing:.1em;margin-bottom:1rem}
+    .hero-eyebrow::before{content:"";width:6px;height:6px;border-radius:50%;background:#3FB950;box-shadow:0 0 0 3px rgba(63,185,80,.15)}
+    .hero-title{font-size:2.35rem;font-weight:700;color:#E6EDF3;letter-spacing:-.03em;line-height:1.12;margin-bottom:.85rem;max-width:640px}
+    .hero-title em{color:#00D4FF;font-style:normal}
+    .hero-sub{font-size:.95rem;color:#8B949E;line-height:1.6;max-width:560px;margin-bottom:1.9rem;font-weight:400}
+    .hero-grid{display:grid;grid-template-columns:1.15fr 1fr;gap:1.4rem;align-items:stretch;margin-bottom:.4rem}
+    @media(max-width:900px){.hero-grid{grid-template-columns:1fr}}
+
+    /* Formula instrument panel — the signature element */
+    .instrument{background:linear-gradient(180deg,#161B22 0%,#12161C 100%);border:1px solid #21262D;border-radius:14px;padding:1.5rem 1.6rem 1.3rem;position:relative;overflow:hidden}
+    .instrument-label{font-size:.62rem;font-weight:600;color:#7D8590;text-transform:uppercase;letter-spacing:.09em;margin-bottom:.7rem}
+    .instrument-eq{font-family:'JetBrains Mono','SF Mono',monospace;font-size:1.55rem;font-weight:600;color:#E6EDF3;letter-spacing:-.01em;margin-bottom:1rem}
+    .instrument-eq .var-e{color:#00D4FF}
+    .instrument-eq .var-i{color:#E3B341}
+    .instrument-eq .var-m{color:#F85149}
+    .instrument-eq .var-r{color:#3FB950}
+    .instrument-bar{height:4px;border-radius:4px;background:linear-gradient(90deg,#3FB950 0%,#E3B341 50%,#F85149 100%);margin-bottom:.65rem;opacity:.85}
+    .instrument-caption{font-size:.68rem;color:#7D8590;display:flex;justify-content:space-between;align-items:center}
+    .instrument-caption .std{font-weight:600;color:#8B949E}
+
+    /* Context panel beside the instrument */
+    .hero-context{background:#161B22;border:1px solid #21262D;border-radius:14px;padding:1.5rem 1.6rem;display:flex;flex-direction:column;justify-content:center;gap:1rem}
+    .hc-row{display:flex;align-items:flex-start;gap:.7rem}
+    .hc-dot{width:7px;height:7px;border-radius:50%;margin-top:.45rem;flex-shrink:0}
+    .hc-text{font-size:.8rem;color:#8B949E;line-height:1.5}
+    .hc-text strong{color:#E6EDF3;font-weight:600}
+
+    /* Polished CTA row */
+    .hero-cta-row{display:flex;gap:.6rem;margin-top:1.5rem;flex-wrap:wrap}
+    div[data-testid="column"] button[kind="primary"]{background:#00D4FF!important;border:1px solid #00D4FF!important;color:#0D1117!important;font-weight:600!important;box-shadow:0 0 0 0 rgba(0,212,255,.4)!important;transition:box-shadow .15s,transform .15s!important}
+    div[data-testid="column"] button[kind="primary"]:hover{box-shadow:0 0 0 4px rgba(0,212,255,.15)!important;transform:translateY(-1px)}
+    div[data-testid="column"] button[kind="secondary"]{background:#161B22!important;border:1px solid #30363D!important;color:#C9D1D9!important;font-weight:500!important;transition:border-color .15s,transform .15s!important}
+    div[data-testid="column"] button[kind="secondary"]:hover{border-color:#00D4FF!important;color:#00D4FF!important;transform:translateY(-1px)}
+    .hero-divider{height:1px;background:linear-gradient(90deg,#21262D 0%,#21262D 60%,transparent 100%);margin:2rem 0 1.6rem}
+
+    /* ── Progress bar ── */
+    .pb-bg{background:#21262D;border-radius:4px;height:5px;overflow:hidden;margin-top:5px}
+    .pb-fill{height:100%;border-radius:4px;background:linear-gradient(90deg,#00D4FF,#0094FF)}
+    .pb-fill.green{background:linear-gradient(90deg,#3FB950,#26A641)}
+    .pb-fill.amber{background:#E3B341}
+    .pb-fill.red{background:#F85149}
+
+    /* ── Widgets ── */
+    .stSelectbox>div>div,.stTextInput>div>div>input,.stNumberInput>div>div>input,.stTextArea>div>div>textarea{background-color:#21262D!important;border:1px solid #30363D!important;color:#E6EDF3!important;border-radius:6px!important}
+    .stSelectbox label,.stTextInput label,.stNumberInput label,.stTextArea label,.stSlider label,.stRadio label,.stMultiSelect label{color:#7D8590!important;font-size:.78rem!important}
+    .stButton>button{background:#21262D!important;border:1px solid #30363D!important;color:#E6EDF3!important;border-radius:6px!important;font-size:.8rem!important;font-weight:500!important;padding:.4rem 1rem!important;transition:all .15s!important}
+    .stButton>button:hover{background:#30363D!important;border-color:#00D4FF!important;color:#00D4FF!important}
+    [data-testid="baseButton-primary"]{background:linear-gradient(135deg,#00D4FF,#0094FF)!important;border:none!important;color:#0D1117!important;font-weight:600!important}
+    [data-testid="baseButton-primary"]:hover{opacity:.9!important;color:#0D1117!important}
+
+    /* ── Tabs ── */
+    .stTabs [data-baseweb="tab-list"]{background:transparent!important;border-bottom:1px solid #21262D!important;gap:0!important}
+    .stTabs [data-baseweb="tab"]{background:transparent!important;color:#7D8590!important;border:none!important;border-bottom:2px solid transparent!important;font-size:.8rem!important;font-weight:500!important;padding:.5rem 1.1rem!important;border-radius:0!important}
+    .stTabs [aria-selected="true"]{color:#00D4FF!important;border-bottom-color:#00D4FF!important;background:transparent!important}
+
+    /* ── Expanders ── */
+    .streamlit-expanderHeader{background:#161B22!important;border:1px solid #21262D!important;border-radius:8px!important;color:#E6EDF3!important;font-size:.82rem!important}
+    .streamlit-expanderContent{background:#161B22!important;border:1px solid #21262D!important;border-top:none!important;border-radius:0 0 8px 8px!important}
+
+    /* ── File uploader ── */
+    [data-testid="stFileUploader"]{background:#161B22!important;border:1px dashed #30363D!important;border-radius:8px!important}
+    [data-testid="stFileUploader"]:hover{border-color:#00D4FF!important}
+
+    /* ── Metrics ── */
+    [data-testid="stMetricValue"]{color:#00D4FF!important;font-size:1.55rem!important;font-weight:700!important}
+    [data-testid="stMetricLabel"]{color:#7D8590!important;font-size:.72rem!important}
+
+    /* ── Alerts ── */
+    .stAlert{background:#161B22!important;border-radius:8px!important}
+
+    /* ── Scrollbar ── */
+    ::-webkit-scrollbar{width:5px;height:5px}
+    ::-webkit-scrollbar-track{background:#0D1117}
+    ::-webkit-scrollbar-thumb{background:#30363D;border-radius:3px}
+    ::-webkit-scrollbar-thumb:hover{background:#484F58}
+
+    /* ── Toggle ── */
+    .stToggle>label>div[role="switch"][aria-checked="true"]{background:#00D4FF!important}
+
+    hr{border-color:#21262D!important}
+    </style>
+    """, unsafe_allow_html=True)
+
+    # ── Fix: consume any button-triggered navigation request BEFORE the
     # sidebar radio widget (key="main_nav") is instantiated below.
-    # Streamlit forbids writing to st.session_state[key] for a widget's
-    # own key once that widget has been instantiated in the current run —
-    # this must happen first, not inside render_home()'s button handlers.
     if "nav_request" in st.session_state:
         st.session_state["main_nav"] = st.session_state.pop("nav_request")
 
