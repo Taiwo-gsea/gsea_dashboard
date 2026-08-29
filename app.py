@@ -382,7 +382,7 @@ def main():
     html,body,[data-testid="stAppViewContainer"]{background-color:#0D1117!important;color:#E6EDF3!important;font-family:'Inter','Segoe UI',sans-serif}
     #MainMenu,footer{visibility:hidden}
     [data-testid="stToolbar"]{visibility:hidden}
-    [data-testid="collapsedControl"]{visibility:visible!important;display:flex!important}
+    [data-testid="stExpandSidebarButton"]{visibility:visible!important;display:flex!important}
     [data-testid="stToolbar"],.stDeployButton{display:none}
 
     /* ── Sidebar ── */
