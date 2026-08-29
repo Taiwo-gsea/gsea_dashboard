@@ -381,9 +381,8 @@ def main():
     *{box-sizing:border-box;margin:0;padding:0}
     html,body,[data-testid="stAppViewContainer"]{background-color:#0D1117!important;color:#E6EDF3!important;font-family:'Inter','Segoe UI',sans-serif}
     #MainMenu,footer{visibility:hidden}
-    [data-testid="stToolbar"]{visibility:hidden}
-    [data-testid="stExpandSidebarButton"]{visibility:visible!important;display:flex!important}
-    [data-testid="stToolbar"],.stDeployButton{display:none}
+    .stAppDeployButton, .stDeployButton {display:none !important;}
+    [data-testid="stToolbarActions"] {display:none !important;}
 
     /* ── Sidebar ── */
     [data-testid="stSidebar"]{background-color:#0D1117!important;border-right:1px solid #21262D!important;min-width:224px!important;max-width:224px!important}
